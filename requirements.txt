@@ -28,3 +28,5 @@ python-magic
 # Testing
 pytest
 pytest-qt
+
+zstandard
