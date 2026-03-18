@@ -1,0 +1,30 @@
+# GUI
+PySide6
+
+# Image conversion
+Pillow
+
+# Document conversion
+python-docx
+PyMuPDF
+reportlab
+markdown
+ebooklib
+
+# Data conversion
+pandas
+openpyxl
+PyYAML
+lxml
+
+# Audio/Video conversion
+pydub
+ffmpeg-python
+imageio-ffmpeg
+
+# File type detection
+python-magic
+
+# Testing
+pytest
+pytest-qt

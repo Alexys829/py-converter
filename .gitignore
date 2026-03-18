@@ -1,0 +1,44 @@
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+*.egg-info/
+*.egg
+dist/
+build/
+.eggs/
+
+# Virtual environments
+venv/
+.venv/
+
+# IDE
+.idea/
+.vscode/
+*.swp
+
+# Testing
+.pytest_cache/
+.mypy_cache/
+
+# Build artifacts
+*.spec.bak
+*.AppImage
+*.deb
+PyConverter.AppDir/
+pyconverter-deb/
+
+# Nuitka
+*.build/
+*.dist/
+*.onefile-build/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+
+# Output
+output/

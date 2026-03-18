@@ -1,0 +1,9 @@
+[Desktop Entry]
+Name=PyConverter
+Comment=Universal cross-platform file converter
+Exec=python3 /home/alessandro/PycharmProjects/py-converter/main.py
+Icon=/home/alessandro/PycharmProjects/py-converter/pyconverter/resources/icons/app_icon.svg
+Terminal=false
+Type=Application
+Categories=Utility;FileTools;
+Keywords=convert;file;image;pdf;audio;video;

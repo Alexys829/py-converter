@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128" width="128" height="128">
+  <!-- Back document -->
+  <rect x="36" y="12" width="60" height="76" rx="6" ry="6" fill="#89b4fa" opacity="0.5" stroke="#89b4fa" stroke-width="2"/>
+  <!-- Front document -->
+  <rect x="32" y="40" width="60" height="76" rx="6" ry="6" fill="#a6e3a1" opacity="0.85" stroke="#a6e3a1" stroke-width="2"/>
+  <!-- Lines on front document -->
+  <line x1="44" y1="58" x2="80" y2="58" stroke="#ffffff" stroke-width="3" stroke-linecap="round"/>
+  <line x1="44" y1="68" x2="74" y2="68" stroke="#ffffff" stroke-width="3" stroke-linecap="round"/>
+  <line x1="44" y1="78" x2="70" y2="78" stroke="#ffffff" stroke-width="3" stroke-linecap="round"/>
+  <!-- Conversion arrow -->
+  <path d="M 88 36 L 108 52 L 88 68" fill="none" stroke="#89b4fa" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+  <line x1="108" y1="52" x2="78" y2="52" stroke="#89b4fa" stroke-width="4" stroke-linecap="round"/>
+</svg>
