@@ -72,9 +72,6 @@ class MainWindow(QMainWindow):
         tools_menu.addAction("Conversion Profiles...", self._open_profiles)
         tools_menu.addAction("Conversion History...", self._open_history)
 
-        view_menu = menu_bar.addMenu("View")
-        view_menu.addAction("Toggle Theme\tCtrl+T", self._toggle_theme)
-
         help_menu = menu_bar.addMenu("Help")
         help_menu.addAction("Features && Supported Formats...\tF1", self._show_help)
         help_menu.addSeparator()
