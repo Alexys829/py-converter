@@ -12,6 +12,7 @@ echo Building with Nuitka...
 python -m nuitka ^
     --standalone ^
     --onefile ^
+    --onefile-no-compression ^
     --windows-console-mode=disable ^
     --windows-icon-from-ico=pyconverter\resources\icons\app_icon.ico ^
     --enable-plugin=pyside6 ^
