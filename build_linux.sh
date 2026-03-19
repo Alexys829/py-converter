@@ -10,11 +10,15 @@ source .venv/bin/activate
 # Build with Nuitka
 echo "Building with Nuitka (this may take a few minutes)..."
 python -m nuitka \
+    --jobs=8 \
     --standalone \
     --onefile \
     --enable-plugin=pyside6 \
     --include-package=pyconverter \
     --include-data-dir=pyconverter/resources=pyconverter/resources \
+    --nofollow-import-to=pymupdf \
+    --nofollow-import-to=fitz \
+    --nofollow-import-to=pandas \
     --output-filename=PyConverter \
     main.py
 

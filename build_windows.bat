@@ -17,6 +17,9 @@ python -m nuitka ^
     --enable-plugin=pyside6 ^
     --include-package=pyconverter ^
     --include-data-dir=pyconverter\resources=pyconverter\resources ^
+    --nofollow-import-to=pymupdf ^
+    --nofollow-import-to=fitz ^
+    --nofollow-import-to=pandas ^
     --output-filename=PyConverter.exe ^
     --company-name="PyConverter" ^
     --product-name="PyConverter" ^

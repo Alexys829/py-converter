@@ -12,12 +12,12 @@
 ```powershell
 # Install dependencies
 python -m venv .venv
-.venv\Scripts\activate
+.venv\Scripts\activate.bat
 pip install -r requirements.txt
 pip install nuitka ordered-set
 
 # Build (uses build_windows.bat)
-build_windows.bat
+.\build_windows.bat
 ```
 
 Output: `PyConverter.exe` (single file, ~80-120 MB)
