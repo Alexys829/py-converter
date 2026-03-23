@@ -63,10 +63,6 @@ class MainWindow(QMainWindow):
         file_menu.addAction("Exit\tCtrl+Q", self.close)
 
         tools_menu = menu_bar.addMenu("Tools")
-        tools_menu.addAction("PDF Tools...", self._open_pdf_editor)
-        tools_menu.addSeparator()
-        tools_menu.addAction("Add Watermark...", self._open_watermark)
-        tools_menu.addSeparator()
         tools_menu.addAction("Watch Folder...", self._open_watcher)
         tools_menu.addSeparator()
         tools_menu.addAction("Conversion Profiles...", self._open_profiles)
@@ -121,7 +117,6 @@ class MainWindow(QMainWindow):
         self._queue_widget.preview_requested.connect(self._on_preview_requested)
         layout.addWidget(self._queue_widget, stretch=1)
 
-        # Estimated output size
         self._estimate_label = QLabel("")
         self._estimate_label.setStyleSheet("color: #6c7086; font-size: 11px;")
         layout.addWidget(self._estimate_label)
@@ -234,7 +229,6 @@ class MainWindow(QMainWindow):
         dialog.exec()
 
     def _update_estimate(self):
-        """Show estimated total input size."""
         paths = self._queue_widget.get_file_paths()
         if not paths:
             self._estimate_label.setText("")
@@ -354,7 +348,6 @@ class MainWindow(QMainWindow):
         self._status_bar.showMessage(msg)
         self._worker = None
 
-        # Desktop notification
         self._send_notification(
             "PyConverter",
             f"{self._completed_count} file(s) converted successfully."
@@ -368,7 +361,6 @@ class MainWindow(QMainWindow):
                     stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL,
                 )
             elif sys.platform == "win32":
-                # Windows 10+ toast via PowerShell
                 ps = (
                     f"[Windows.UI.Notifications.ToastNotificationManager, Windows.UI.Notifications, "
                     f"ContentType = WindowsRuntime] > $null; "
@@ -400,16 +392,6 @@ class MainWindow(QMainWindow):
             subprocess.Popen(["xdg-open", folder])
 
     # ── Tools ──
-
-    def _open_pdf_editor(self):
-        from pyconverter.gui.pdf_editor_dialog import PDFEditorDialog
-        dialog = PDFEditorDialog(self)
-        dialog.exec()
-
-    def _open_watermark(self):
-        from pyconverter.gui.watermark_dialog import WatermarkDialog
-        dialog = WatermarkDialog(self)
-        dialog.exec()
 
     def _open_watcher(self):
         from pyconverter.gui.watcher_dialog import WatcherDialog
@@ -459,7 +441,6 @@ class MainWindow(QMainWindow):
         tabs = QTabWidget()
         dlg_layout.addWidget(tabs, stretch=1)
 
-        # ── Tab 1: Features ──
         features_browser = QTextBrowser()
         features_browser.setOpenExternalLinks(False)
         features_browser.setHtml("""
@@ -472,31 +453,28 @@ class MainWindow(QMainWindow):
             <tr><td><b>File Preview</b></td><td>Preview images, text, and PDFs before converting</td></tr>
             <tr><td><b>Queue Management</b></td><td>Remove single files (X), remove selected (Delete), or clear all</td></tr>
             <tr><td><b>Conversion Options</b></td><td>Quality, resolution, compression, bitrate, etc. per format</td></tr>
-            <tr><td><b>Image Compression</b></td><td>Optimize images without changing format (PNG to PNG with optimize)</td></tr>
+            <tr><td><b>Image Compression</b></td><td>Optimize images without changing format (PNG to PNG)</td></tr>
             <tr><td><b>Audio from Video</b></td><td>Extract audio tracks from MP4, MKV, AVI, etc.</td></tr>
-            <tr><td><b>Output Directory</b></td><td>Choose where to save converted files (default: same folder)</td></tr>
+            <tr><td><b>Output Directory</b></td><td>Choose where to save converted files</td></tr>
             <tr><td><b>Open Folder</b></td><td>Quickly open output folder after conversion</td></tr>
         </table>
         <h3>Tools</h3>
         <table cellspacing="6">
-            <tr><td><b>PDF Tools</b></td><td>9 tools: page editor, merge, split, rotate, extract images, images to PDF, compress, password, page numbers</td></tr>
-            <tr><td><b>Watermark</b></td><td>Add text watermark to images and PDFs (custom position, opacity, rotation)</td></tr>
-            <tr><td><b>Watch Folder</b></td><td>Monitor a folder and auto-convert new files (with optional subfolders)</td></tr>
-            <tr><td><b>Profiles</b></td><td>Save conversion presets (format + options) and reload them later</td></tr>
-            <tr><td><b>History</b></td><td>View all past conversions with status, errors, and timestamps</td></tr>
+            <tr><td><b>Watch Folder</b></td><td>Monitor a folder and auto-convert new files</td></tr>
+            <tr><td><b>Profiles</b></td><td>Save conversion presets and reload them</td></tr>
+            <tr><td><b>History</b></td><td>View past conversions with status and errors</td></tr>
         </table>
         <h3>General</h3>
         <table cellspacing="6">
-            <tr><td><b>Recent Files</b></td><td>Quick access to last 10 files used (File menu)</td></tr>
-            <tr><td><b>Desktop Notifications</b></td><td>System notification when batch conversion finishes</td></tr>
-            <tr><td><b>Keyboard Shortcuts</b></td><td>Ctrl+O, Ctrl+Enter, Delete, Ctrl+T, Ctrl+Q, F1</td></tr>
-            <tr><td><b>Dark / Light Theme</b></td><td>Material Design theme, toggle with Ctrl+T</td></tr>
-            <tr><td><b>CLI Mode</b></td><td>Full command-line interface (convert, batch, formats)</td></tr>
+            <tr><td><b>Recent Files</b></td><td>Quick access to last 10 files (File menu)</td></tr>
+            <tr><td><b>Notifications</b></td><td>System notification when batch finishes</td></tr>
+            <tr><td><b>Shortcuts</b></td><td>Ctrl+O, Ctrl+Enter, Delete, Ctrl+T, Ctrl+Q, F1</td></tr>
+            <tr><td><b>Theme</b></td><td>Dark / Light Material Design (Ctrl+T)</td></tr>
+            <tr><td><b>CLI</b></td><td>Command-line: convert, batch, formats</td></tr>
         </table>
         """)
         tabs.addTab(features_browser, "Features")
 
-        # ── Tab 2: Conversions ──
         lines = []
         for conv in ConverterRegistry.list_converters():
             inputs = ", ".join(f".{f}" for f in conv.supported_input_formats())
@@ -519,8 +497,8 @@ class MainWindow(QMainWindow):
         <table border="1" cellspacing="0" style="border-collapse:collapse; border-color:#555">
             <tr style="background-color:#333; color:#fff">
                 <th style="padding:4px">Converter</th>
-                <th style="padding:4px">Input Formats</th>
-                <th style="padding:4px">Output Formats</th>
+                <th style="padding:4px">Input</th>
+                <th style="padding:4px">Output</th>
                 <th style="padding:4px">Options</th>
             </tr>
             {"".join(lines)}
@@ -528,76 +506,43 @@ class MainWindow(QMainWindow):
         <br>
         <b>Notes:</b>
         <ul>
-            <li>Audio/Video conversion uses bundled ffmpeg (no system install needed)</li>
-            <li>Audio converter also accepts video files to extract audio tracks</li>
-            <li>Image compression: convert to same format (e.g. PNG to PNG) with Optimize enabled</li>
-            <li>Files are never overwritten: auto-rename adds _1, _2, etc. if output exists</li>
+            <li>Audio/Video uses bundled ffmpeg (no system install needed)</li>
+            <li>Audio converter accepts video files to extract audio</li>
+            <li>Image compression: convert to same format with Optimize</li>
+            <li>Auto-rename adds _1, _2, etc. if output exists</li>
         </ul>
         """)
         tabs.addTab(conv_browser, "Conversions")
 
-        # ── Tab 3: PDF Tools ──
-        pdf_browser = QTextBrowser()
-        pdf_browser.setHtml("""
-        <h3>PDF Tools</h3>
-        <p>All PDF tools are in <b>Tools &gt; PDF Tools</b>, organized in tabs:</p>
-        <table cellspacing="6">
-            <tr><td><b>Editor</b></td><td>Open a PDF, view page thumbnails, add/remove/reorder pages from multiple PDFs, insert at specific position, save</td></tr>
-            <tr><td><b>Merge</b></td><td>Select multiple PDFs, reorder them, merge into a single file</td></tr>
-            <tr><td><b>Split</b></td><td>Split a PDF into single pages, or extract a specific page range (e.g. pages 3-7)</td></tr>
-            <tr><td><b>Rotate</b></td><td>Rotate pages 90/180/270 degrees. Apply to all, odd, even, or a custom range (e.g. 1,3,5-8)</td></tr>
-            <tr><td><b>Images</b></td><td>Extract all embedded images from a PDF and save them as PNG or JPG</td></tr>
-            <tr><td><b>IMG to PDF</b></td><td>Combine multiple images (PNG, JPG, BMP, etc.) into a single PDF, with reordering</td></tr>
-            <tr><td><b>Compress</b></td><td>Reduce PDF file size by recompressing images (adjustable quality), garbage collection, and deflation. Shows before/after size</td></tr>
-            <tr><td><b>Password</b></td><td>Encrypt a PDF with AES-256 password protection, or decrypt/remove password from an existing PDF</td></tr>
-            <tr><td><b>Page Numbers</b></td><td>Add page numbers with customizable position (6 options), format (5 templates), font size, and start page</td></tr>
-        </table>
-        """)
-        tabs.addTab(pdf_browser, "PDF Tools")
-
-        # ── Tab 4: CLI ──
         cli_browser = QTextBrowser()
         cli_browser.setHtml("""
         <h3>Command Line Interface</h3>
-        <p>Use the app from terminal without GUI:</p>
-
-        <h4>Convert a single file</h4>
         <pre>python main.py convert file.png -f jpg
 python main.py convert photo.png -f jpg --option quality 90
-python main.py convert doc.txt -f pdf --option font_size 14
-python main.py convert image.png -f png --option optimize True</pre>
-
-        <h4>Batch convert</h4>
-        <pre>python main.py batch *.png -f webp -d output/
-python main.py batch file1.csv file2.csv -f json
+python main.py batch *.png -f webp -d output/
 python main.py batch -r folder/ -f png -d output/
-python main.py batch video.mp4 -f mp3 --option bitrate 320</pre>
-
-        <h4>List supported formats</h4>
-        <pre>python main.py formats</pre>
-
+python main.py formats</pre>
         <h4>Options</h4>
         <table cellspacing="4">
             <tr><td><code>-f, --format</code></td><td>Target format (required)</td></tr>
-            <tr><td><code>-o, --output</code></td><td>Output file path (convert only)</td></tr>
-            <tr><td><code>-d, --output-dir</code></td><td>Output directory (batch only, default: current dir)</td></tr>
-            <tr><td><code>-r, --recursive</code></td><td>Process directories recursively (batch only)</td></tr>
-            <tr><td><code>--option KEY VALUE</code></td><td>Set converter option, repeatable (e.g. --option quality 80 --option resize_width 1920)</td></tr>
+            <tr><td><code>-o, --output</code></td><td>Output file path</td></tr>
+            <tr><td><code>-d, --output-dir</code></td><td>Output directory (batch)</td></tr>
+            <tr><td><code>-r, --recursive</code></td><td>Recurse directories (batch)</td></tr>
+            <tr><td><code>--option KEY VALUE</code></td><td>Converter option (repeatable)</td></tr>
         </table>
         """)
         tabs.addTab(cli_browser, "CLI Usage")
 
-        # ── Tab 5: Shortcuts ──
         shortcuts_browser = QTextBrowser()
         shortcuts_browser.setHtml("""
         <h3>Keyboard Shortcuts</h3>
         <table cellspacing="8">
-            <tr><td><b>Ctrl+O</b></td><td>Add files to conversion queue</td></tr>
+            <tr><td><b>Ctrl+O</b></td><td>Add files</td></tr>
             <tr><td><b>Ctrl+Enter</b></td><td>Start conversion</td></tr>
-            <tr><td><b>Delete</b></td><td>Remove selected files from queue</td></tr>
-            <tr><td><b>Ctrl+T</b></td><td>Toggle dark/light theme</td></tr>
-            <tr><td><b>Ctrl+Q</b></td><td>Exit application</td></tr>
-            <tr><td><b>F1</b></td><td>Open this help dialog</td></tr>
+            <tr><td><b>Delete</b></td><td>Remove selected from queue</td></tr>
+            <tr><td><b>Ctrl+T</b></td><td>Toggle theme</td></tr>
+            <tr><td><b>Ctrl+Q</b></td><td>Exit</td></tr>
+            <tr><td><b>F1</b></td><td>Help</td></tr>
         </table>
         """)
         tabs.addTab(shortcuts_browser, "Shortcuts")
@@ -627,7 +572,7 @@ python main.py batch video.mp4 -f mp3 --option bitrate 320</pre>
             "About PyConverter",
             f"<h3>PyConverter v{__version__}</h3>"
             f"<p>Universal cross-platform file converter.</p>"
-            f"<p>Supports images, documents, data, audio, video, and PDF tools.</p>"
+            f"<p>Supports images, documents, data, audio, and video.</p>"
             f"<p>Parallel conversion, Material Design, keyboard shortcuts.</p>",
         )
 

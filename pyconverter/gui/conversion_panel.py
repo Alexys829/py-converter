@@ -66,9 +66,23 @@ class ConversionPanel(QWidget):
         self._input_format = fmt.lower().lstrip(".")
         self._format_combo.blockSignals(True)
         self._format_combo.clear()
-        formats = ConverterRegistry.get_output_formats(self._input_format)
-        # Remove the input format from output list
-        formats = [f for f in formats if f != self._input_format]
+
+        # Handle format aliases (jpg/jpeg, tif/tiff, yml/yaml)
+        aliases = {
+            "jpg": ["jpg", "jpeg"], "jpeg": ["jpg", "jpeg"],
+            "tif": ["tif", "tiff"], "tiff": ["tif", "tiff"],
+            "yml": ["yml", "yaml"], "yaml": ["yml", "yaml"],
+        }
+        input_variants = aliases.get(self._input_format, [self._input_format])
+
+        all_outputs: set[str] = set()
+        for variant in input_variants:
+            all_outputs.update(ConverterRegistry.get_output_formats(variant))
+
+        # Remove input format and its aliases from output list
+        exclude = set(input_variants)
+        formats = sorted(f for f in all_outputs if f not in exclude)
+
         self._format_combo.addItems(formats)
         self._format_combo.blockSignals(False)
         if formats:
